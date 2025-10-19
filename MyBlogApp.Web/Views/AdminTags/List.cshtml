@@ -1,0 +1,42 @@
+﻿@model List<MyBlogApp.Web.Models.Domain.Tag>
+@{
+    ViewData["Title"] = "Tags List";
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+         <h1>Showing Tags</h1>
+    </div>
+</div>
+
+<div class="container" py-5>
+    @if (Model != null && Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Display Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tag in Model)
+                {
+                    <tr>
+                        <td>@tag.Id</td>
+                        <td>@tag.Name</td>
+                        <td>@tag.DisplayName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            No tags available.
+        </div>
+    } 
+</div>
+
