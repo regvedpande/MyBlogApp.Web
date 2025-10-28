@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyBlogApp.Web.Data;
+using MyBlogApp.Web.Repositories;
 
 namespace MyBlogApp.Web
 {
@@ -15,6 +16,8 @@ namespace MyBlogApp.Web
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("BloggieDbConnectionString"));
             });
+
+            builder.Services.AddScoped<ITagRepository, TagRepository>();
 
             var app = builder.Build();
 
