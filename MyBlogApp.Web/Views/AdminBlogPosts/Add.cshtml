@@ -1,4 +1,5 @@
-﻿
+﻿@model MyBlogApp.Web.Models.ViewModels.AddBlogPostsRequest
+
 @{
 }
 <div class="bg-secondary bg-opacity-10 py-2">
@@ -7,7 +8,7 @@
     </div>
 </div>
 
-<div class="container py-2">     
+<div class="container py-5">     
     <form method="post">          
         <div class="mb-3">              
             <label class="form-label">Heading</label>              
@@ -53,8 +54,15 @@
             <input type="checkbox" class="form-check-input" id="visible" asp-for="Visible"/>
             <label class="form-check-label" for="visible">Visible</label>          
         </div>
-        
-        <button type="submit" class="btn btn-primary">Add BlogPost</button>      
+
+        <div class="mb-3">
+            <label class="form-label">Tags</label>
+            <select class="form-select" asp-items="Model.Tags" asp-for="SelectedTagId">
+                <option value="">Select a tag</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>      
     </form> 
 </div>
 
