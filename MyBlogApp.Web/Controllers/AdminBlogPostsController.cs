@@ -28,5 +28,10 @@ namespace MyBlogApp.Web.Controllers
             };
             return View(model);
         }
+
+        public async Task<IActionResult> Add(AddBlogPostsRequest addBlogPostsRequest)
+        {
+            return RedirectToAction("Add");                                                                 
+        }
     }
 }
