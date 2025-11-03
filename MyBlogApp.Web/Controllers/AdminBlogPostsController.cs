@@ -14,6 +14,13 @@ namespace MyBlogApp.Web.Controllers
         {
             this.tagRepository = tagRepository;
         }
+
+        [HttpGet]
+        public IActionResult List()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Add()
         {
             //get all tags from the database
@@ -29,6 +36,7 @@ namespace MyBlogApp.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Add(AddBlogPostsRequest addBlogPostsRequest)
         {
             return RedirectToAction("Add");                                                                 

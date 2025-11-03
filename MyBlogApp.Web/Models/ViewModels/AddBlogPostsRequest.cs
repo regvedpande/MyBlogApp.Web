@@ -19,6 +19,6 @@ namespace MyBlogApp.Web.Models.ViewModels
         public IEnumerable<SelectListItem> Tags { get; set; }
 
         // To capture selected tag from the user
-        public string SelectedTagId { get; set; }
+        public string[] SelectedTags { get; set; } = Array.Empty<string>();
     }
 }
