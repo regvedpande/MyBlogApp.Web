@@ -1,3 +1,4 @@
+using Bloggie.Web.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MyBlogApp.Web.Data;
 using MyBlogApp.Web.Repositories;
@@ -18,6 +19,7 @@ namespace MyBlogApp.Web
             });
 
             builder.Services.AddScoped<ITagRepository, TagRepository>();
+            builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 
             var app = builder.Build();
 

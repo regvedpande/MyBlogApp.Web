@@ -12,9 +12,11 @@ namespace MyBlogApp.Web.Repositories
         {
             this.BloggieDbContext = dbContext;
         }
-        public Task<BlogPost> AddAsync(BlogPost blogPost)
+        public async Task<BlogPost> AddAsync(BlogPost blogPost)
         {
-            throw new NotImplementedException();
+            await BloggieDbContext.BlogPosts.AddAsync(blogPost);
+            await BloggieDbContext.SaveChangesAsync();
+            return blogPost;
         }
 
         public Task<BlogPost?> DeleteAsync(Guid id)
