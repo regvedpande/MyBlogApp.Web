@@ -11,6 +11,7 @@ namespace MyBlogApp.Web.Controllers
     public class AdminBlogPostsController : Controller
     {
         private readonly ITagRepository tagRepository;
+        private readonly IBlogPostRepository blogPostRepository;
 
         public AdminBlogPostsController(ITagRepository tagRepository,IBlogPostRepository blogPostRepository)
         {
@@ -20,7 +21,8 @@ namespace MyBlogApp.Web.Controllers
         [HttpGet]
         public IActionResult List()
         {
-            return View();
+            var blogPosts = blogPostRepository.GetAllAsync();
+            return View(blogPosts);
         }
 
         public async Task<IActionResult> Add()
