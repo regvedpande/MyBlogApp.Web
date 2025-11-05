@@ -76,5 +76,35 @@ namespace MyBlogApp.Web.Controllers
             await blogPostRepository.AddAsync(blogPost);
             return RedirectToAction("Add");
         }
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var blogPost = await blogPostRepository.GetAsync(id);
+            if(blogPost == null)
+            {
+                return View("NotFound");
+            }
+            var tags = await tagRepository.GetAllAsync();
+            var model = new EditBlogPostRequest
+            {
+                Id = blogPost.Id,
+                Heading = blogPost.Heading,
+                PageTitle = blogPost.PageTitle,
+                Content = blogPost.Content,
+                ShortDescription = blogPost.ShortDescription,
+                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                UrlHandle = blogPost.UrlHandle,
+                PublishedDate = blogPost.PublishedDate,
+                Author = blogPost.Author,
+                Visible = blogPost.Visible,
+                Tags = tags.Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Name
+                }),
+                SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
+            };
+            return View(model);
+        }
     }
 }
