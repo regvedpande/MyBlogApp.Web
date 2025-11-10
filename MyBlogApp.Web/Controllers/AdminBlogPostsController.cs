@@ -77,6 +77,7 @@ namespace MyBlogApp.Web.Controllers
             return RedirectToAction("Add");
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
             var blogPost = await blogPostRepository.GetAsync(id);
@@ -105,6 +106,48 @@ namespace MyBlogApp.Web.Controllers
                 SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
             };
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditBlogPostRequest editBlogPostRequest)
+        {
+            // Map ViewModel to Domain Model
+            var blogPostDomainModel = new BlogPost
+            {
+                Id = editBlogPostRequest.Id,
+                Heading = editBlogPostRequest.Heading,
+                PageTitle = editBlogPostRequest.PageTitle,
+                Content = editBlogPostRequest.Content,
+                ShortDescription = editBlogPostRequest.ShortDescription,
+                FeaturedImageUrl = editBlogPostRequest.FeaturedImageUrl,
+                UrlHandle = editBlogPostRequest.UrlHandle,
+                PublishedDate = editBlogPostRequest.PublishedDate,
+                Author = editBlogPostRequest.Author,
+                Visible = editBlogPostRequest.Visible
+            };
+
+            //Map Tags into Domain Model
+            var selectedTags = new List<Tag>();
+            foreach (var selectedTagId in editBlogPostRequest.SelectedTags)
+            {
+                if (Guid.TryParse(selectedTagId, out var tag))
+                {
+                    var foundTag = await tagRepository.GetAsync(tag);
+                    if ( foundTag!= null)
+                    {
+                        selectedTags.Add(foundTag);
+                    }
+                }
+            }
+            blogPostDomainModel.Tags = selectedTags;
+
+            //Submit Information to Repository to Update
+            var updatedBlog = await blogPostRepository.UpdateAsync(blogPostDomainModel);
+            if (updatedBlog != null)
+            {
+                return RedirectToAction("Edit");
+            }
+            return RedirectToAction("Index");
         }
     }
 }

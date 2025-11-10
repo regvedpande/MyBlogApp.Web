@@ -35,9 +35,27 @@ namespace MyBlogApp.Web.Repositories
             return await BloggieDbContext.BlogPosts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<BlogPost?> UpdateAsync(BlogPost blogPost)
+        public async Task<BlogPost?> UpdateAsync(BlogPost blogPost)
         {
-            throw new NotImplementedException();
+           var existingBlog = await BloggieDbContext.BlogPosts.FirstOrDefaultAsync(x=>x.Id ==blogPost.Id);
+            if (existingBlog != null)
+            {
+                existingBlog.Id = blogPost.Id;
+                existingBlog.Heading = blogPost.Heading;
+                existingBlog.Content = blogPost.Content;
+                existingBlog.FeaturedImageUrl = blogPost.FeaturedImageUrl;
+                existingBlog.UrlHandle = blogPost.UrlHandle;
+                existingBlog.PublishedDate = blogPost.PublishedDate;
+                existingBlog.Author = blogPost.Author;
+                existingBlog.Visible = blogPost.Visible;
+                existingBlog.PageTitle = blogPost.PageTitle;
+                existingBlog.ShortDescription = blogPost.ShortDescription;
+                existingBlog.Tags = blogPost.Tags;
+
+                await BloggieDbContext.SaveChangesAsync();
+                return existingBlog;
+            }
+            return null;
         }
     }
 }

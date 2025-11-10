@@ -11,6 +11,9 @@
 <div class="container py-5">
     @if(Model ! =null)
     {
+
+        <form method = "post">
+
         <div class="container py-5">     
     <form method="post">      
          <div class="mb-3">              
@@ -68,6 +71,12 @@
                 <option value="">Select a tag</option>
             </select>
         </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Update Blog Post</button>
+        </div>
+        
+
+        </form>
     }
     else
     {
