@@ -2,7 +2,7 @@
 
 namespace MyBlogApp.Web.Models.ViewModels
 {
-    internal class EditBlogPostRequest
+    public class EditBlogPostRequest
     {
         public Guid Id { get; set; }
         public string Heading { get; set; }
