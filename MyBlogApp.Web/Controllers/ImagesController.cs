@@ -8,9 +8,9 @@ namespace MyBlogApp.Web.Controllers
     public class ImagesController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(IFormFile file)
         {
-            return Ok("This is the Get Images API Call");
+            
         }
     }
 }
