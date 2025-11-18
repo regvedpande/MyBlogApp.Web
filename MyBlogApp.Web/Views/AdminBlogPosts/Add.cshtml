@@ -1,4 +1,4 @@
-﻿@model MyBlogApp.Web.Models.Domain.BlogPost>
+﻿@model MyBlogApp.Web.Models.ViewModels.AddBlogPostsRequest
 
 @{
 }
@@ -37,7 +37,7 @@
 
         <div class ="mb-3">              
             <label class="form-label">Featured Image Upload</label>              
-            <input type="file" class="form-control" id="featuredImageUpload" asp-for="FeaturedImageUpload"/>
+            <input type="file" class="form-control" id="featuredImageUpload"/>
             <input type ="text" class="form-control mt-2" placeholder="Or enter image URL" id="featuredImageDisplay" asp-for="FeaturedImageUrl"/>
         </div>
 
@@ -63,8 +63,7 @@
 
         <div class="mb-3">
             <label class="form-label">Tags</label>
-            <select class="form-select" asp-items="Model.Tags" asp-for="SelectedTags">
-                <option value="">Select a tag</option>
+            <select class="form-select" asp-items="Model.Tags" asp-for="SelectedTags" multiple>
             </select>
         </div>
 
@@ -80,7 +79,7 @@
         const featuredUploadElement  = document.getElementById('featuredImageUpload');
         const featuredImageUrlElement = document.getElementById('featuredImageUrl');
         const featuredImageUrlManualElement = document.getElementById('featuredImageDisplay');
-        featuredUploadElement.addEventListener('change', function() {
+        featuredUploadElement.addEventListener('change', async function(e) {
             const file = this.files[0];
 
             let data = new FormData();
@@ -92,15 +91,13 @@
                     'Accept': '*/*',
                 },
                 body: data
-            }).then(response => response.json()).
-            then(result => {
-                if (result && result.url) {
+            }).then(response => response.json())
+            .then(result => {
+                if (result && result.link) {
                     featuredImageUrlElement.value = result.link;
-                    featuredImageUrlManualElement.src = result.link;
-                    featuredImageUrlManualElement.style.display = 'block';
+                    featuredImageUrlManualElement.value = result.link;
                 }
             });
         });
     </script>
 }
-

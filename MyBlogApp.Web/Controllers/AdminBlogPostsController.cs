@@ -13,18 +13,20 @@ namespace MyBlogApp.Web.Controllers
         private readonly ITagRepository tagRepository;
         private readonly IBlogPostRepository blogPostRepository;
 
-        public AdminBlogPostsController(ITagRepository tagRepository,IBlogPostRepository blogPostRepository)
+        public AdminBlogPostsController(ITagRepository tagRepository, IBlogPostRepository blogPostRepository)
         {
             this.tagRepository = tagRepository;
+            this.blogPostRepository = blogPostRepository;
         }
 
         [HttpGet]
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
-            var blogPosts = blogPostRepository.GetAllAsync();
+            var blogPosts = await blogPostRepository.GetAllAsync();
             return View(blogPosts);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Add()
         {
             //get all tags from the database
@@ -56,7 +58,7 @@ namespace MyBlogApp.Web.Controllers
                 Author = addBlogPostsRequest.Author,
                 Visible = addBlogPostsRequest.Visible
             };
-            
+
             // Map Tags from selected Tags
             var selectedTags = new List<Tag>();
 
@@ -64,14 +66,14 @@ namespace MyBlogApp.Web.Controllers
             {
                 var selectedTagIdAsGuid = Guid.Parse(selectedTagId);
                 var existingTag = await tagRepository.GetAsync(selectedTagIdAsGuid);
-                if(existingTag != null)
+                if (existingTag != null)
                 {
                     selectedTags.Add(existingTag);
                 }
             }
 
             //Mapping tags back to domain model
-            blogPost.Tags = selectedTags;   
+            blogPost.Tags = selectedTags;
 
             await blogPostRepository.AddAsync(blogPost);
             return RedirectToAction("Add");
@@ -81,7 +83,7 @@ namespace MyBlogApp.Web.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var blogPost = await blogPostRepository.GetAsync(id);
-            if(blogPost == null)
+            if (blogPost == null)
             {
                 return View("NotFound");
             }
@@ -133,7 +135,7 @@ namespace MyBlogApp.Web.Controllers
                 if (Guid.TryParse(selectedTagId, out var tag))
                 {
                     var foundTag = await tagRepository.GetAsync(tag);
-                    if ( foundTag!= null)
+                    if (foundTag != null)
                     {
                         selectedTags.Add(foundTag);
                     }
@@ -147,7 +149,7 @@ namespace MyBlogApp.Web.Controllers
             {
                 return RedirectToAction("Edit");
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("List");
         }
 
         [HttpPost]
@@ -155,11 +157,12 @@ namespace MyBlogApp.Web.Controllers
         {
             //Talk to the repository to delete blog post and tags
             var deletedBlogPost = await blogPostRepository.DeleteAsync(editBlogPostRequest.Id);
-            if (deletedBlogPost != null) {
+            if (deletedBlogPost != null)
+            {
                 //we can show some message to user
                 return RedirectToAction("List");
             }
-            return RedirectToAction("Edit", new { id = editBlogPostRequest.Id } );
+            return RedirectToAction("Edit", new { id = editBlogPostRequest.Id });
 
         }
     }

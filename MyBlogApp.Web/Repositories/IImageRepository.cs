@@ -1,6 +1,6 @@
 ﻿namespace MyBlogApp.Web.Repositories
 {
-    public class IImageRepository
+    public interface IImageRepository
     {
         Task<string> UploadAsync(IFormFile file);
     }

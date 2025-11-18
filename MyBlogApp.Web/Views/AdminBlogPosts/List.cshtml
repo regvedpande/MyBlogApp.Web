@@ -1,5 +1,4 @@
-@model MyBlogApp.Web.Models.Domain.BlogPost>
-
+@model IEnumerable<MyBlogApp.Web.Models.Domain.BlogPost>
 @{
 }
 <div class="bg-secondary bg-opacity-10 py-2">
@@ -7,41 +6,38 @@
          <h1>All BlogPosts - Admin Functionality</h1>
     </div>
 </div>
-
-
 <div class="container py-5">     
-    if (Model != null && Model.Any())
+    @if (Model != null && Model.Any())
     {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Heading</th>
-                <th>Tags</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-           @foreach (var blogPost in Model)
-           {
-               <tr>
-                   <td>@blogPost.Id</td>
-                   <td>@blogPost.Heading</td>
-                     <td>
-                          @foreach (var tag in blogPost.Tags)
-                          {
-                            <span class="badge bg-primary">@tag.Name</span>
-                          }
-               </tr>
-           }
-
-           
-        </tbody>
-    </table>
-    }else
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Heading</th>
+                    <th>Tags</th>
+                </tr>
+            </thead>
+            <tbody>
+               @foreach (var blogPost in Model)
+               {
+                   <tr>
+                       <td>@blogPost.Id</td>
+                       <td>@blogPost.Heading</td>
+                       <td>
+                            @foreach (var tag in blogPost.Tags)
+                            {
+                                <span class="badge bg-primary">@tag.Name</span>
+                            }
+                       </td>
+                   </tr>
+               }
+            </tbody>
+        </table>
+    }
+    else
     {
         <div class="alert alert-info" role="alert">
             No blog posts available.
         </div>
     }
-    </div>
+</div>
