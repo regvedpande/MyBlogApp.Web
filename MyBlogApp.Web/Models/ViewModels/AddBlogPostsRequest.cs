@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using MyBlogApp.Web.Models.Domain;
-
 namespace MyBlogApp.Web.Models.ViewModels
 {
     public class AddBlogPostsRequest
@@ -14,11 +12,7 @@ namespace MyBlogApp.Web.Models.ViewModels
         public DateTime PublishedDate { get; set; }
         public string Author { get; set; }
         public bool Visible { get; set; }
-
-        // Display available tags in a dropdown
         public IEnumerable<SelectListItem> Tags { get; set; }
-
-        // To capture selected tag from the user
         public string[] SelectedTags { get; set; } = Array.Empty<string>();
     }
 }

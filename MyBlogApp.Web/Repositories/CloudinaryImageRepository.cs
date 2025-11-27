@@ -1,11 +1,16 @@
-﻿namespace MyBlogApp.Web.Repositories
+﻿using Microsoft.AspNetCore.Http;
+namespace MyBlogApp.Web.Repositories
 {
     public class CloudinaryImageRepository : IImageRepository
     {
-        public Task<string> UploadAsync(IFormFile file)
+        public async Task<string> UploadAsync(IFormFile file)
         {
-            // Implementation for uploading image to Cloudinary
-            throw new NotImplementedException();
+            // TODO: Implement Cloudinary upload logic
+            // Example:
+            // var uploadParams = new ImageUploadParams { File = new FileDescription(file.FileName, file.OpenReadStream()) };
+            // var uploadResult = await cloudinary.UploadAsync(uploadParams);
+            // return uploadResult.SecureUrl.ToString();
+            return "https://example.com/uploaded-image.jpg"; // Placeholder
         }
     }
 }

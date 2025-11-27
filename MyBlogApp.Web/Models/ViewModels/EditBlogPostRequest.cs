@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
 namespace MyBlogApp.Web.Models.ViewModels
 {
     public class EditBlogPostRequest

@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using MyBlogApp.Web.Data;
 using MyBlogApp.Web.Models.Domain;
 using MyBlogApp.Web.Models.ViewModels;
 using MyBlogApp.Web.Repositories;
-using System.Linq.Expressions;
 namespace MyBlogApp.Web.Controllers
 {
     public class AdminTagsController : Controller
@@ -21,14 +17,8 @@ namespace MyBlogApp.Web.Controllers
             return View();
         }
         [HttpPost]
-        [ActionName("Add")]
         public async Task<IActionResult> Add(AddTagRequest addTagRequest)
         {
-            //var name = addTagRequest.Name;
-            //var displayName = addTagRequest.DisplayName;
-            //var name =  Request.Form["name"];
-            //var displayName = Request.Form["displayName"];
-            //Mapping AddTagRequest to Tag Domain Model
             var tag = new Tag
             {
                 Name = addTagRequest.Name,
@@ -38,22 +28,17 @@ namespace MyBlogApp.Web.Controllers
             return RedirectToAction("List");
         }
         [HttpGet]
-        [ActionName("List")]
         public async Task<IActionResult> List()
         {
-            // use the bloggieDbContext to get all tags from the database
             var tags = await tagRepository.GetAllAsync();
             return View(tags);
         }
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            //var tag = bloggieDbContext.Tags.Find(id);
-            //or
             var tag = await tagRepository.GetAsync(id);
             if (tag != null)
             {
-                //We are converting it back into domain model
                 var editTagRequest = new EditTagRequest
                 {
                     Id = tag.Id,
@@ -67,7 +52,6 @@ namespace MyBlogApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditTagRequest editTagRequest)
         {
-            //We are converting it back into domain model
             var tag = new Tag
             {
                 Id = editTagRequest.Id,
@@ -78,9 +62,6 @@ namespace MyBlogApp.Web.Controllers
             if (updatedTag != null)
             {
                 return RedirectToAction("List");
-            }
-            else
-            {
             }
             return RedirectToAction("Edit", new { id = editTagRequest.Id });
         }

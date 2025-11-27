@@ -1,35 +1,28 @@
-﻿using Bloggie.Web.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyBlogApp.Web.Models.Domain;
 using MyBlogApp.Web.Models.ViewModels;
 using MyBlogApp.Web.Repositories;
-using System.Threading.Tasks;
-
 namespace MyBlogApp.Web.Controllers
 {
     public class AdminBlogPostsController : Controller
     {
         private readonly ITagRepository tagRepository;
         private readonly IBlogPostRepository blogPostRepository;
-
         public AdminBlogPostsController(ITagRepository tagRepository, IBlogPostRepository blogPostRepository)
         {
             this.tagRepository = tagRepository;
             this.blogPostRepository = blogPostRepository;
         }
-
         [HttpGet]
         public async Task<IActionResult> List()
         {
             var blogPosts = await blogPostRepository.GetAllAsync();
             return View(blogPosts);
         }
-
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            //get all tags from the database
             var tags = await tagRepository.GetAllAsync();
             var model = new AddBlogPostsRequest
             {
@@ -41,11 +34,9 @@ namespace MyBlogApp.Web.Controllers
             };
             return View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> Add(AddBlogPostsRequest addBlogPostsRequest)
         {
-            //Map the ViewModel to Domain Model
             var blogPost = new BlogPost
             {
                 Heading = addBlogPostsRequest.Heading,
@@ -56,29 +47,23 @@ namespace MyBlogApp.Web.Controllers
                 UrlHandle = addBlogPostsRequest.UrlHandle,
                 PublishedDate = addBlogPostsRequest.PublishedDate,
                 Author = addBlogPostsRequest.Author,
-                Visible = addBlogPostsRequest.Visible
+                Visible = addBlogPostsRequest.Visible,
+                Tags = new List<Tag>()
             };
-
-            // Map Tags from selected Tags
-            var selectedTags = new List<Tag>();
-
             foreach (var selectedTagId in addBlogPostsRequest.SelectedTags)
             {
-                var selectedTagIdAsGuid = Guid.Parse(selectedTagId);
-                var existingTag = await tagRepository.GetAsync(selectedTagIdAsGuid);
-                if (existingTag != null)
+                if (Guid.TryParse(selectedTagId, out var tagId))
                 {
-                    selectedTags.Add(existingTag);
+                    var existingTag = await tagRepository.GetAsync(tagId);
+                    if (existingTag != null)
+                    {
+                        blogPost.Tags.Add(existingTag);
+                    }
                 }
             }
-
-            //Mapping tags back to domain model
-            blogPost.Tags = selectedTags;
-
             await blogPostRepository.AddAsync(blogPost);
-            return RedirectToAction("Add");
+            return RedirectToAction("List");
         }
-
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -109,11 +94,9 @@ namespace MyBlogApp.Web.Controllers
             };
             return View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> Edit(EditBlogPostRequest editBlogPostRequest)
         {
-            // Map ViewModel to Domain Model
             var blogPostDomainModel = new BlogPost
             {
                 Id = editBlogPostRequest.Id,
@@ -125,45 +108,36 @@ namespace MyBlogApp.Web.Controllers
                 UrlHandle = editBlogPostRequest.UrlHandle,
                 PublishedDate = editBlogPostRequest.PublishedDate,
                 Author = editBlogPostRequest.Author,
-                Visible = editBlogPostRequest.Visible
+                Visible = editBlogPostRequest.Visible,
+                Tags = new List<Tag>()
             };
-
-            //Map Tags into Domain Model
-            var selectedTags = new List<Tag>();
             foreach (var selectedTagId in editBlogPostRequest.SelectedTags)
             {
-                if (Guid.TryParse(selectedTagId, out var tag))
+                if (Guid.TryParse(selectedTagId, out var tagId))
                 {
-                    var foundTag = await tagRepository.GetAsync(tag);
+                    var foundTag = await tagRepository.GetAsync(tagId);
                     if (foundTag != null)
                     {
-                        selectedTags.Add(foundTag);
+                        blogPostDomainModel.Tags.Add(foundTag);
                     }
                 }
             }
-            blogPostDomainModel.Tags = selectedTags;
-
-            //Submit Information to Repository to Update
             var updatedBlog = await blogPostRepository.UpdateAsync(blogPostDomainModel);
             if (updatedBlog != null)
             {
-                return RedirectToAction("Edit");
-            }
-            return RedirectToAction("List");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(EditBlogPostRequest editBlogPostRequest)
-        {
-            //Talk to the repository to delete blog post and tags
-            var deletedBlogPost = await blogPostRepository.DeleteAsync(editBlogPostRequest.Id);
-            if (deletedBlogPost != null)
-            {
-                //we can show some message to user
                 return RedirectToAction("List");
             }
             return RedirectToAction("Edit", new { id = editBlogPostRequest.Id });
-
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(EditBlogPostRequest editBlogPostRequest)
+        {
+            var deletedBlogPost = await blogPostRepository.DeleteAsync(editBlogPostRequest.Id);
+            if (deletedBlogPost != null)
+            {
+                return RedirectToAction("List");
+            }
+            return RedirectToAction("Edit", new { id = editBlogPostRequest.Id });
         }
     }
 }

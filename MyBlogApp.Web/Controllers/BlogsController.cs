@@ -1,12 +1,10 @@
-﻿using Bloggie.Web.Repositories;
-using Microsoft.AspNetCore.Mvc;
-
+﻿using Microsoft.AspNetCore.Mvc;
+using MyBlogApp.Web.Repositories;
 namespace MyBlogApp.Web.Controllers
 {
     public class BlogsController : Controller
     {
         private readonly IBlogPostRepository blogPostRepository;
-
         public BlogsController(IBlogPostRepository blogPostRepository)
         {
             this.blogPostRepository = blogPostRepository;
@@ -14,7 +12,7 @@ namespace MyBlogApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string urlHandle)
         {
-            var blogPost = blogPostRepository.GetByUrlHandleAsync(urlHandle);
+            var blogPost = await blogPostRepository.GetByUrlHandleAsync(urlHandle);
             return View(blogPost);
         }
     }

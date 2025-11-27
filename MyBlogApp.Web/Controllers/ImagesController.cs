@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBlogApp.Web.Repositories;
-using System.Net;
-
 namespace MyBlogApp.Web.Controllers
 {
     [Route("api/[controller]")]
@@ -10,7 +8,6 @@ namespace MyBlogApp.Web.Controllers
     public class ImagesController : ControllerBase
     {
         private readonly IImageRepository imageRepository;
-
         public ImagesController(IImageRepository imageRepository)
         {
             this.imageRepository = imageRepository;
@@ -19,9 +16,9 @@ namespace MyBlogApp.Web.Controllers
         public async Task<IActionResult> UploadAsync(IFormFile file)
         {
             var imageUrl = await imageRepository.UploadAsync(file);
-            if(imageUrl == null)
+            if (imageUrl == null)
             {
-                return Problem("Something went wrong while uploading the image.", null, (int)HttpStatusCode.InternalServerError);
+                return Problem("Something went wrong while uploading the image.", null, 500);
             }
             return new JsonResult(new { link = imageUrl });
         }

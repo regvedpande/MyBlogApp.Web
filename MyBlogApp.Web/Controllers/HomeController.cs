@@ -1,38 +1,38 @@
-using System.Diagnostics;
-using Bloggie.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using MyBlogApp.Web.Models;
+using MyBlogApp.Web.Models.ViewModels;
 using MyBlogApp.Web.Repositories;
-
 namespace MyBlogApp.Web.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly BlogPostRepository blogPostRepository;
-
-        public HomeController(ILogger<HomeController> logger, BlogPostRepository blogPostRepository)
+        private readonly IBlogPostRepository blogPostRepository;
+        private readonly ITagRepository tagRepository;
+        public HomeController(ILogger<HomeController> logger, IBlogPostRepository blogPostRepository, ITagRepository tagRepository)
         {
             _logger = logger;
             this.blogPostRepository = blogPostRepository;
+            this.tagRepository = tagRepository;
         }
-
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var blogPosts = blogPostRepository.GetAllAsync();
-            return View(blogPosts);
+            var blogPosts = await blogPostRepository.GetAllAsync();
+            var tags = await tagRepository.GetAllAsync();
+            var model = new HomeViewModel
+            {
+                BlogPosts = blogPosts,
+                Tags = tags
+            };
+            return View(model);
         }
-
         public IActionResult Privacy()
         {
-            var posts = blogPostRepository.GetAllAsync();
-            return View(posts);
+            return View();
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
     }
 }
