@@ -1,0 +1,36 @@
+﻿@model MyBlogApp.Web.Models.ViewModels.MarketingEmailViewModel
+@{
+    ViewData["Title"] = "Compose Marketing Email";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3>Compose Marketing Email</h3>
+                @if(ViewBag.Message != null)
+                {
+                    <div class="alert alert-info">@ViewBag.Message</div>
+                }
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <input asp-for="Subject" class="form-control" />
+                        <span asp-validation-for="Subject" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">HTML Body</label>
+                        <textarea asp-for="Body" class="form-control" rows="10"></textarea>
+                        <small class="form-text text-muted">You can use placeholders: <code>{{displayName}}</code> and <code>{{username}}</code>.</small>
+                        <span asp-validation-for="Body" class="text-danger"></span>
+                    </div>
+                    <button class="btn btn-primary">Send to all users</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

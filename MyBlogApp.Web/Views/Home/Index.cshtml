@@ -2,23 +2,36 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+
 <div class="container py-5">
     <h1 class="mb-4">Latest Blog Posts</h1>
-    @if (Model.BlogPosts != null && Model.BlogPosts.Any())
-    {
-        foreach (var blogPost in Model.BlogPosts)
+
+    <div class="row g-4">
+        @if (Model.BlogPosts != null && Model.BlogPosts.Any())
         {
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title">@blogPost.Heading</h2>
-                    <p class="card-text">@blogPost.ShortDescription</p>
-                    <a asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle" class="btn btn-primary">Read More</a>
+            var visible = Model.BlogPosts.Where(b => b.Visible).OrderByDescending(b => b.PublishedDate).ToList();
+            foreach (var blogPost in visible)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        <img src="@blogPost.FeaturedImageUrl" class="card-img-top" style="height:180px;object-fit:cover;" alt="@blogPost.Heading" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@blogPost.Heading</h5>
+                            <p class="card-text text-muted small mb-2">@blogPost.ShortDescription</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <a asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@blogPost.UrlHandle" class="btn btn-sm btn-primary">Read more</a>
+                                <small class="text-muted">@blogPost.PublishedDate.ToString("yyyy-MM-dd")</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <p>No blog posts available.</p>
             </div>
         }
-    }
-    else
-    {
-        <p>No blog posts available.</p>
-    }
+    </div>
 </div>

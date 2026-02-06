@@ -1,42 +1,40 @@
 ﻿@model MyBlogApp.Web.Models.Domain.BlogPost
-<div class="container">
-    <div class="row justify-content-center">
-       <div class="col-6 d-flex flex-wrap">
-            @if(Model != null && Model.Tags.Any())
-            {
-                foreach(var tag in Model.Tags)
-                {
-                    <span class="badge bg-secondary me-2">@tag.Name</span>
-                }
-            }
-        </div>
-    </div>
-</div>
+
 <div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-8">
-            @if (Model != null)
+    @if (Model == null)
+    {
+        <div class="alert alert-warning">Blog not found.</div>
+        return;
+    }
+
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-3">
+                @foreach(var tag in Model.Tags ?? Enumerable.Empty<MyBlogApp.Web.Models.Domain.Tag>())
+                {
+                    <span class="badge bg-secondary me-2">@tag.DisplayName ?? tag.Name</span>
+                }
+            </div>
+
+            <h1 class="mb-3">@Model.Heading</h1>
+
+            <div class="d-flex justify-content-between mb-3 text-muted">
+                <div>By <strong>@Model.Author</strong></div>
+                <div>@Model.PublishedDate.ToString("yyyy-MM-dd")</div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.FeaturedImageUrl))
             {
-                <h1 class="mb-3">@Model.Heading</h1>
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-secondary">By @Model.Author</span>
-                    <span class="text-secondary">@Model.PublishedDate.ToShortDateString()</span>
-                </div>
-                <img src="@Model.FeaturedImageUrl" alt="Featured Image" class="d-block img-fluid mb-3" />
-                <div class="mb-3 d-flex">
-                    @foreach(var tag in Model.Tags)
-                    {
-                        <span class="badge bg-primary me-2">@tag.Name</span>
-                    }
-                </div>
-                <div class="mb-3 blog-details-content">
-                    @Html.Raw(Model.Content)
-                </div>
+                <img src="@Model.FeaturedImageUrl" alt="Featured image" class="img-fluid rounded mb-4" style="max-height:420px;object-fit:cover;width:100%;"/>
             }
-            else
-            {
-                <p>No blog posts available.</p>
-            }
+
+            <div class="mb-5 blog-details-content">
+                @Html.Raw(Model.Content)
+            </div>
+
+            <div class="mt-4">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Back to list</a>
+            </div>
         </div>
     </div>
 </div>

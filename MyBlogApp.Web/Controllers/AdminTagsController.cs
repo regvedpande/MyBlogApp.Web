@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyBlogApp.Web.Models.Domain;
 using MyBlogApp.Web.Models.ViewModels;
 using MyBlogApp.Web.Repositories;
 namespace MyBlogApp.Web.Controllers
 {
+    [Authorize]
     public class AdminTagsController : Controller
     {
         private readonly ITagRepository tagRepository;

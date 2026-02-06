@@ -1,22 +1,87 @@
-html {
-  font-size: 14px;
+:root {
+    --primary: #3b82f6;
+    --muted: #6b7280;
+    --bg: #f8fafc;
+    --card-shadow: 0 6px 18px rgba(15,23,42,0.06);
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+html, body {
+    height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    background: var(--bg);
+    color: #0f1724;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main.container {
+    flex: 1 0 auto; /* ensures footer is pushed to bottom */
+}
+
+.navbar {
+    background: linear-gradient(90deg, rgba(59,130,246,1), rgba(37,99,235,1));
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+}
+
+.brand-avatar {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.12);
+}
+
+.navbar-avatar {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.profile-large {
+    box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+}
+
+.footer {
+    background: #fff;
+    margin-top: 32px;
+    border-top: 1px solid #e6e6e6;
+    flex-shrink: 0;
+}
+
+.card .card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.blog-details-content img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.badge {
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+}
+
+@media (max-width: 768px) {
+    .navbar .dropdown-menu {
+        right: 0;
+        left: auto;
+    }
+
+    main.container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
 }

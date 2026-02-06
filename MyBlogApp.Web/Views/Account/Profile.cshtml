@@ -1,0 +1,103 @@
+﻿@model MyBlogApp.Web.Models.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+    // Masked API key for default view (no embedded escaped quotes)
+    var maskedApi = Model?.ApiKey != null ? Model.ApiKey.Substring(0, 6) + "..." : "";
+    var profileImage = Model?.ProfileImageUrl ?? "/images/profiles/default-avatar.png";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div>
+                        <!-- Use single quotes around the attribute so the C# expression can contain double-quoted strings if needed -->
+                        <img src='@(profileImage)' alt="avatar" class="rounded-circle profile-large me-3" style="width:96px;height:96px;object-fit:cover;" />
+                    </div>
+                    <div class="flex-fill">
+                        <h3 class="mb-0">@Model.DisplayName</h3>
+                        <div class="text-muted small">@Model.UserName</div>
+                        <div class="text-muted small">Member since @Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd")</div>
+                    </div>
+                </div>
+
+                <form asp-action="UploadProfileImage" asp-controller="Account" method="post" enctype="multipart/form-data" class="mb-3">
+                    <div class="mb-2">
+                        <label class="form-label">Change profile picture</label>
+                        <input type="file" name="profileImage" class="form-control" accept="image/*" />
+                    </div>
+                    <button class="btn btn-outline-primary btn-sm">Upload</button>
+                </form>
+
+                <form asp-action="UpdateProfile" asp-controller="Account" method="post" class="mb-3">
+                    <div class="mb-3">
+                        <label class="form-label">Display name</label>
+                        <input name="DisplayName" value="@Model.DisplayName" class="form-control" />
+                    </div>
+                    <button class="btn btn-primary">Save</button>
+                </form>
+
+                <div class="mb-3">
+                    <label class="form-label">Test API key</label>
+                    <div class="input-group">
+                        <!-- Use the precomputed maskedApi variable to avoid inline escaping -->
+                        <input id="apiKeyInput" type="text" readonly class="form-control" value="@maskedApi" data-revealed="0" />
+                        <button id="revealKey" class="btn btn-outline-secondary">Reveal</button>
+
+                        <form asp-action="RegenerateApiKey" method="post" class="d-inline ms-2">
+                            <button type="submit" class="btn btn-outline-danger">Regenerate</button>
+                        </form>
+
+                        <button id="copyKey" class="btn btn-outline-secondary ms-2">Copy</button>
+                    </div>
+                    <small class="text-muted">API key is hidden by default. Reveal only for testing.</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Reveal button: fetches the full key from a protected endpoint and replaces the masked value.
+        document.getElementById('revealKey')?.addEventListener('click', function (e) {
+            e.preventDefault();
+            const input = document.getElementById('apiKeyInput');
+            if (!input) return;
+            if (input.dataset.revealed === '1') {
+                // hide again
+                input.value = input.value.substring(0, 6) + '...';
+                input.dataset.revealed = '0';
+                this.textContent = 'Reveal';
+                return;
+            }
+
+            fetch('/api/account/apikey', { method: 'GET' })
+                .then(function (r) {
+                    if (!r.ok) throw new Error('Unable to fetch API key');
+                    return r.text();
+                })
+                .then(function (k) {
+                    input.value = k;
+                    input.dataset.revealed = '1';
+                    document.getElementById('revealKey').textContent = 'Hide';
+                })
+                .catch(function () {
+                    alert('Unable to reveal key. Make sure you are logged in.');
+                });
+        });
+
+        document.getElementById('copyKey')?.addEventListener('click', function (e) {
+            const input = document.getElementById('apiKeyInput');
+            if (!input) return;
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = document.getElementById('copyKey');
+                if (!btn) return;
+                btn.textContent = 'Copied';
+                setTimeout(() => btn.textContent = 'Copy', 1500);
+            });
+        });
+    </script>
+}
