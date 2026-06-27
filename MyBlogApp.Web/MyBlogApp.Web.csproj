@@ -16,4 +16,16 @@
     <PackageReference Include="xunit.abstractions" Version="2.0.3" />
   </ItemGroup>
 
+  <!-- Legacy mock/test snippets are retained for reference but are not application controllers. -->
+  <ItemGroup>
+    <Compile Remove="Controllers\AnotherMock.cs" />
+    <Compile Remove="Controllers\AnotherMoqController.cs" />
+    <Compile Remove="Controllers\BuildController.cs" />
+    <Compile Remove="Controllers\HandlingController.cs" />
+    <Compile Remove="Controllers\MqTestController.cs" />
+    <Compile Remove="Controllers\MoqController.cs" />
+    <Compile Remove="Controllers\Testing.cs" />
+    <Compile Remove="Controllers\UnitController.cs" />
+  </ItemGroup>
+
 </Project>

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyBlogApp.Web.Models.ViewModels;
 using MyBlogApp.Web.Repositories;
+using MyBlogApp.Web.Services;
 namespace MyBlogApp.Web.Controllers
 {
     public class HomeController : Controller
@@ -16,8 +17,28 @@ namespace MyBlogApp.Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var blogPosts = await blogPostRepository.GetAllAsync();
-            var tags = await tagRepository.GetAllAsync();
+            IEnumerable<Models.Domain.BlogPost> databasePosts = [];
+            IEnumerable<Models.Domain.Tag> databaseTags = [];
+            try
+            {
+                databasePosts = await blogPostRepository.GetAllAsync();
+                databaseTags = await tagRepository.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Database content is unavailable; showing the static blog catalog.");
+            }
+
+            var blogPosts = databasePosts
+                .Concat(StaticBlogCatalog.Posts)
+                .GroupBy(post => post.UrlHandle, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First())
+                .ToList();
+            var tags = databaseTags
+                .Concat(StaticBlogCatalog.Posts.SelectMany(post => post.Tags))
+                .GroupBy(tag => tag.Name, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First())
+                .ToList();
             var model = new HomeViewModel
             {
                 BlogPosts = blogPosts,
