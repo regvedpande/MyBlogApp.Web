@@ -14,7 +14,8 @@ Built to demonstrate full-stack .NET skills with real-world features like authen
 Thank you for checking out my project! This is a **fully functional blogging platform** I built to demonstrate my skills with the .NET ecosystem. Everything works out of the box - just follow the quick setup below to see it in action.
 
 ### What You'll See
-- A polished, responsive blog homepage with **6 pre-loaded demo posts**
+- A polished, responsive blog homepage with **6 built-in editorial stories** and local artwork
+- Story search, topic filters, featured content, and estimated reading times
 - Complete user registration and authentication system
 - Admin dashboard for managing posts and tags
 - Rich text editor with image uploads
@@ -39,6 +40,8 @@ Thank you for checking out my project! This is a **fully functional blogging pla
 **Frontend Development**
 - Razor Pages with clean, semantic HTML
 - Responsive CSS design (mobile-friendly)
+- Client-side story search and category filtering
+- Accessible, locally hosted SVG artwork with no external image dependency
 - WYSIWYG editor integration (Froala)
 - Image upload and management
 
