@@ -52,7 +52,7 @@ namespace MyBlogApp.Web.Controllers
                 Visible = addBlogPostsRequest.Visible,
                 Tags = new List<Tag>()
             };
-            foreach (var selectedTagId in addBlogPostsRequest.SelectedTags)
+            foreach (var selectedTagId in addBlogPostsRequest.SelectedTags ?? [])
             {
                 if (Guid.TryParse(selectedTagId, out var tagId))
                 {
@@ -113,7 +113,7 @@ namespace MyBlogApp.Web.Controllers
                 Visible = editBlogPostRequest.Visible,
                 Tags = new List<Tag>()
             };
-            foreach (var selectedTagId in editBlogPostRequest.SelectedTags)
+            foreach (var selectedTagId in editBlogPostRequest.SelectedTags ?? [])
             {
                 if (Guid.TryParse(selectedTagId, out var tagId))
                 {

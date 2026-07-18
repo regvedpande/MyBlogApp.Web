@@ -60,6 +60,10 @@
 .blog-details-content { max-width: 760px; margin-inline: auto; font-size: 1.08rem; line-height: 1.85; }
 .blog-details-content h2 { margin-top: 2.25rem; font-weight: 700; letter-spacing: -.025em; }
 .blog-details-content blockquote { border-left: 4px solid var(--primary); padding: .75rem 1.25rem; margin: 2rem 0; color: #475569; font-size: 1.25rem; }
+.related-story { display: grid; gap: .65rem; color: inherit; text-decoration: none; }
+.related-story img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; background: #e2e8f0; }
+.related-story span { color: #64748b; font-size: .82rem; }
+.related-story strong { font-size: 1.05rem; line-height: 1.25; }
 
 html, body {
     height: 100%;

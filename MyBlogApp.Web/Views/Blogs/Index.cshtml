@@ -1,7 +1,11 @@
-﻿@model MyBlogApp.Web.Models.Domain.BlogPost
+@model MyBlogApp.Web.Models.ViewModels.BlogDetailsViewModel
+@{
+    var blogPost = Model?.BlogPost;
+    var relatedPosts = Model?.RelatedPosts?.ToList() ?? [];
+}
 
 <div class="container my-5">
-    @if (Model == null)
+    @if (blogPost == null)
     {
         <div class="alert alert-warning">Blog not found.</div>
         return;
@@ -10,27 +14,49 @@
     <div class="row">
         <div class="col-12">
             <div class="mb-3">
-                @foreach(var tag in Model.Tags ?? Enumerable.Empty<MyBlogApp.Web.Models.Domain.Tag>())
+                @foreach(var tag in blogPost.Tags ?? Enumerable.Empty<MyBlogApp.Web.Models.Domain.Tag>())
                 {
-                    <span class="badge bg-secondary me-2">@tag.DisplayName ?? tag.Name</span>
+                    <span class="badge bg-secondary me-2">@(tag.DisplayName ?? tag.Name)</span>
                 }
             </div>
 
-            <h1 class="mb-3">@Model.Heading</h1>
+            <h1 class="mb-3">@blogPost.Heading</h1>
 
             <div class="d-flex justify-content-between mb-3 text-muted">
-                <div>By <strong>@Model.Author</strong></div>
-                <div>@Model.PublishedDate.ToString("yyyy-MM-dd")</div>
+                <div>By <strong>@blogPost.Author</strong></div>
+                <div>@blogPost.PublishedDate.ToString("yyyy-MM-dd")</div>
             </div>
 
-            @if (!string.IsNullOrWhiteSpace(Model.FeaturedImageUrl))
+            @if (!string.IsNullOrWhiteSpace(blogPost.FeaturedImageUrl))
             {
-                <img src="@Model.FeaturedImageUrl" alt="Featured image" class="img-fluid rounded mb-4" style="max-height:420px;object-fit:cover;width:100%;"/>
+                <img src="@blogPost.FeaturedImageUrl" alt="Featured image" class="img-fluid rounded mb-4" style="max-height:420px;object-fit:cover;width:100%;"/>
             }
 
             <div class="mb-5 blog-details-content">
-                @Html.Raw(Model.Content)
+                @Html.Raw(blogPost.Content)
             </div>
+
+            @if (relatedPosts.Any())
+            {
+                <section class="related-stories mt-5" aria-labelledby="related-stories-heading">
+                    <div class="mb-3">
+                        <span class="eyebrow">KEEP READING</span>
+                        <h2 id="related-stories-heading" class="section-title mb-0">Related stories</h2>
+                    </div>
+                    <div class="row g-4">
+                        @foreach (var relatedPost in relatedPosts)
+                        {
+                            <article class="col-12 col-md-4">
+                                <a asp-controller="Blogs" asp-action="Index" asp-route-urlHandle="@relatedPost.UrlHandle" class="related-story">
+                                    <img src="@relatedPost.FeaturedImageUrl" alt="Illustration for @relatedPost.Heading" loading="lazy" />
+                                    <span>@relatedPost.PublishedDate.ToString("MMM d, yyyy")</span>
+                                    <strong>@relatedPost.Heading</strong>
+                                </a>
+                            </article>
+                        }
+                    </div>
+                </section>
+            }
 
             <div class="mt-4">
                 <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Back to list</a>
