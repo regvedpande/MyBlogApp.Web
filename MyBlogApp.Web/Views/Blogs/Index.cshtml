@@ -22,9 +22,12 @@
 
             <h1 class="mb-3">@blogPost.Heading</h1>
 
-            <div class="d-flex justify-content-between mb-3 text-muted">
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3 text-muted">
                 <div>By <strong>@blogPost.Author</strong></div>
-                <div>@blogPost.PublishedDate.ToString("yyyy-MM-dd")</div>
+                <div class="d-flex align-items-center gap-3">
+                    <span>@blogPost.PublishedDate.ToString("yyyy-MM-dd")</span>
+                    <button type="button" class="copy-link-button" data-copy-link aria-label="Copy story link">Copy link</button>
+                </div>
             </div>
 
             @if (!string.IsNullOrWhiteSpace(blogPost.FeaturedImageUrl))
@@ -64,3 +67,4 @@
         </div>
     </div>
 </div>
+@section Scripts { <script src="~/js/site.js" asp-append-version="true"></script> }

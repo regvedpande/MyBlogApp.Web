@@ -64,6 +64,9 @@
 .related-story img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; background: #e2e8f0; }
 .related-story span { color: #64748b; font-size: .82rem; }
 .related-story strong { font-size: 1.05rem; line-height: 1.25; }
+.copy-link-button { border: 1px solid #dbe2ea; background: #fff; color: #475569; border-radius: 999px; padding: .35rem .75rem; font-size: .82rem; font-weight: 700; transition: .2s ease; }
+.copy-link-button:hover, .copy-link-button:focus { border-color: #2563eb; color: #2563eb; }
+.copy-link-button.copied { border-color: #16a34a; color: #15803d; background: #f0fdf4; }
 
 html, body {
     height: 100%;

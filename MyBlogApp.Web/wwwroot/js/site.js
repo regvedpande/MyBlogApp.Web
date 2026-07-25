@@ -29,3 +29,24 @@ filterButtons.forEach(button => button.addEventListener('click', () => {
     filterButtons.forEach(item => item.classList.toggle('active', item === button));
     filterStories();
 }));
+
+document.querySelectorAll('[data-copy-link]').forEach(button => {
+    const defaultText = button.textContent;
+
+    button.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            button.textContent = 'Copied';
+            button.classList.add('copied');
+            setTimeout(() => {
+                button.textContent = defaultText;
+                button.classList.remove('copied');
+            }, 1800);
+        } catch {
+            button.textContent = 'Copy failed';
+            setTimeout(() => {
+                button.textContent = defaultText;
+            }, 1800);
+        }
+    });
+});
