@@ -9,15 +9,15 @@ namespace YourAppNamespace.Models
 
         [Required]
         [StringLength(100)]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Required]
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
 
         [DataType(DataType.Date)]
         public DateTime PublishedDate { get; set; }
 
         [StringLength(50)]
-        public string Author { get; set; }
+        public string Author { get; set; } = string.Empty;
     }
 }

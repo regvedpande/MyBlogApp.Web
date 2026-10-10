@@ -23,6 +23,11 @@ namespace MyBlogApp.Web.Services
             var from = smtp.GetValue<string>("From");
             var display = smtp.GetValue<string>("DisplayName");
 
+            if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(from))
+            {
+                return;
+            }
+
             var message = new MailMessage();
             message.From = new MailAddress(from, display);
             message.To.Add(new MailAddress(toEmail));

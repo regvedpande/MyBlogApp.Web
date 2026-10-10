@@ -55,7 +55,7 @@ namespace MyBlogApp.Web.Controllers
                 DisplayName = string.IsNullOrWhiteSpace(model.DisplayName) ? model.UserName : model.DisplayName,
                 ApiKey = Guid.NewGuid().ToString("N"),
                 // give a default local avatar so DB doesn't receive NULL
-                ProfileImageUrl = "/images/profiles/default-avatar.png"
+                ProfileImageUrl = "/images/profiles/bb5cb604-4ba8-40fd-9cad-dcfa0eadf429.jpg"
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, model.Password);
@@ -91,7 +91,7 @@ namespace MyBlogApp.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string? returnUrl = null)
         {
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
@@ -133,7 +133,10 @@ namespace MyBlogApp.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            if (!User.Identity.IsAuthenticated) return RedirectToAction("Login");
+            if (User.Identity?.IsAuthenticated != true || string.IsNullOrWhiteSpace(User.Identity.Name))
+            {
+                return RedirectToAction("Login");
+            }
 
             var user = await _userRepository.GetByUserNameAsync(User.Identity.Name);
             if (user == null) return RedirectToAction("Login");
@@ -154,7 +157,10 @@ namespace MyBlogApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(ProfileEditViewModel vm)
         {
-            if (!User.Identity.IsAuthenticated) return Unauthorized();
+            if (User.Identity?.IsAuthenticated != true || string.IsNullOrWhiteSpace(User.Identity.Name))
+            {
+                return Unauthorized();
+            }
 
             var user = await _userRepository.GetByUserNameAsync(User.Identity.Name);
             if (user == null) return NotFound();
@@ -176,7 +182,10 @@ namespace MyBlogApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadProfileImage(IFormFile profileImage)
         {
-            if (!User.Identity.IsAuthenticated) return Unauthorized();
+            if (User.Identity?.IsAuthenticated != true || string.IsNullOrWhiteSpace(User.Identity.Name))
+            {
+                return Unauthorized();
+            }
 
             var user = await _userRepository.GetByUserNameAsync(User.Identity.Name);
             if (user == null) return NotFound();
@@ -218,7 +227,10 @@ namespace MyBlogApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RegenerateApiKey()
         {
-            if (!User.Identity.IsAuthenticated) return Unauthorized();
+            if (User.Identity?.IsAuthenticated != true || string.IsNullOrWhiteSpace(User.Identity.Name))
+            {
+                return Unauthorized();
+            }
 
             var user = await _userRepository.GetByUserNameAsync(User.Identity.Name);
             if (user == null) return NotFound();

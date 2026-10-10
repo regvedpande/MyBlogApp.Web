@@ -6,9 +6,9 @@ namespace MyBlogApp.Web.Models.ViewModels
     {
         [Required]
         [StringLength(200)]
-        public string Subject { get; set; }
+        public string Subject { get; set; } = string.Empty;
 
         [Required]
-        public string Body { get; set; }
+        public string Body { get; set; } = string.Empty;
     }
 }

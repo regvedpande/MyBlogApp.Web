@@ -18,6 +18,11 @@ namespace MyBlogApp.Web.Controllers.Api
         [Authorize]
         public async Task<IActionResult> GetApiKey()
         {
+            if (User.Identity?.IsAuthenticated != true || string.IsNullOrWhiteSpace(User.Identity.Name))
+            {
+                return Unauthorized();
+            }
+
             var user = await _userRepository.GetByUserNameAsync(User.Identity.Name);
             if (user == null) return NotFound();
             return Content(user.ApiKey);

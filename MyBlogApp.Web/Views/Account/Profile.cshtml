@@ -2,8 +2,11 @@
 @{
     ViewData["Title"] = "Profile";
     // Masked API key for default view (no embedded escaped quotes)
-    var maskedApi = Model?.ApiKey != null ? Model.ApiKey.Substring(0, 6) + "..." : "";
-    var profileImage = Model?.ProfileImageUrl ?? "/images/profiles/default-avatar.png";
+    var apiKey = Model?.ApiKey ?? "";
+    var maskedApi = apiKey.Length > 6 ? apiKey[..6] + "..." : apiKey;
+    var profileImage = string.IsNullOrWhiteSpace(Model?.ProfileImageUrl)
+        ? "/images/profiles/bb5cb604-4ba8-40fd-9cad-dcfa0eadf429.jpg"
+        : Model.ProfileImageUrl;
 }
 
 <div class="row justify-content-center">
@@ -16,9 +19,9 @@
                         <img src='@(profileImage)' alt="avatar" class="rounded-circle profile-large me-3" style="width:96px;height:96px;object-fit:cover;" />
                     </div>
                     <div class="flex-fill">
-                        <h3 class="mb-0">@Model.DisplayName</h3>
-                        <div class="text-muted small">@Model.UserName</div>
-                        <div class="text-muted small">Member since @Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd")</div>
+                        <h3 class="mb-0">@Model?.DisplayName</h3>
+                        <div class="text-muted small">@Model?.UserName</div>
+                        <div class="text-muted small">Member since @Model?.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd")</div>
                     </div>
                 </div>
 
@@ -33,7 +36,7 @@
                 <form asp-action="UpdateProfile" asp-controller="Account" method="post" class="mb-3">
                     <div class="mb-3">
                         <label class="form-label">Display name</label>
-                        <input name="DisplayName" value="@Model.DisplayName" class="form-control" />
+                        <input name="DisplayName" value="@Model?.DisplayName" class="form-control" />
                     </div>
                     <button class="btn btn-primary">Save</button>
                 </form>
