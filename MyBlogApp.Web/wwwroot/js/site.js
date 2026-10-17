@@ -3,7 +3,7 @@
 
 const searchInput = document.querySelector('#blog-search');
 const filterButtons = [...document.querySelectorAll('[data-blog-filter]')];
-const blogCards = [...document.querySelectorAll('#blog-grid [data-blog-card]')];
+const blogCards = [...document.querySelectorAll('[data-blog-card]')];
 const emptyState = document.querySelector('#blog-empty');
 let activeFilter = 'all';
 
@@ -14,7 +14,8 @@ function filterStories() {
     blogCards.forEach(card => {
         const searchableText = `${card.dataset.title} ${card.dataset.description} ${card.dataset.tags}`.toLowerCase();
         const matchesSearch = !query || searchableText.includes(query);
-        const matchesFilter = activeFilter === 'all' || (card.dataset.tags ?? '').toLowerCase().includes(activeFilter);
+        const tags = (card.dataset.tags ?? '').toLowerCase().split(/\s+/).filter(Boolean);
+        const matchesFilter = activeFilter === 'all' || tags.includes(activeFilter);
         const isVisible = matchesSearch && matchesFilter;
         card.classList.toggle('d-none', !isVisible);
         if (isVisible) visibleCount += 1;
@@ -26,7 +27,11 @@ function filterStories() {
 searchInput?.addEventListener('input', filterStories);
 filterButtons.forEach(button => button.addEventListener('click', () => {
     activeFilter = button.dataset.blogFilter ?? 'all';
-    filterButtons.forEach(item => item.classList.toggle('active', item === button));
+    filterButtons.forEach(item => {
+        const isActive = item === button;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-pressed', String(isActive));
+    });
     filterStories();
 }));
 
